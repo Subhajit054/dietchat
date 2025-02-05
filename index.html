@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriFit - Diet & Fitness Companion</title>
+    <title>AutoDiet - Intelligent Nutrition Assistant</title>
     <style>
         :root {
-            --primary: #FF6B6B;
-            --secondary: #4ECDC4;
-            --accent: #FFE66D;
-            --bg: linear-gradient(135deg, #1a1a1a 0%, #2d3436 100%);
-            --text: #F7FFF7;
-            --card-bg: rgba(255, 255, 255, 0.1);
+            --primary: #00e676;
+            --secondary: #2979ff;
+            --accent: #ff9100;
+            --bg: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
+            --text: #e6f1ff;
+            --card-bg: rgba(255, 255, 255, 0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Segoe UI', system-ui;
         }
 
         body {
@@ -39,110 +39,89 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        h2 {
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .auto-recommendations {
+            display: grid;
+            gap: 1.5rem;
+            padding: 1rem;
         }
 
-        /* Profile Setup */
-        #profile-setup form {
+        .recommendation-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .food-category {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .food-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .meal-timeline {
             display: grid;
             gap: 1rem;
         }
 
-        input, select {
-            width: 100%;
+        .meal-time {
             padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        /* Enhanced Chat Interface */
-        .chat-box {
-            height: 60vh;
-            overflow-y: auto;
-            padding: 1rem;
-            background: var(--card-bg);
-            border-radius: 15px;
-            margin-bottom: 1.5rem;
-        }
-
-        .recommendation-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 1rem;
-            margin: 1rem 0;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .badge-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-        }
-
-        .badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            background: var(--secondary);
-            color: #fff;
-            font-size: 0.9rem;
-        }
-
-        .avoid-badge {
-            background: var(--primary);
-        }
-
-        .workout-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 4px solid var(--accent);
-            margin: 1rem 0;
-            padding: 1rem;
+            background: rgba(var(--primary-rgb), 0.1);
+            border-left: 4px solid var(--primary);
             border-radius: 8px;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            overflow: hidden;
+        .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             margin: 1rem 0;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 60%;
-            transition: width 0.5s ease;
+        .macro-card {
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Hover Effects */
-        .recommendation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+        .weekly-plan {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .day-card {
+            padding: 1rem;
+            background: rgba(0, 230, 118, 0.1);
+            border-radius: 8px;
+            text-align: center;
         }
 
         @media (max-width: 480px) {
             .container {
                 padding: 1rem;
-                border-radius: 15px;
             }
             
-            .chat-box {
-                height: 65vh;
+            .macro-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -150,176 +129,136 @@
 <body>
     <div class="container">
         <div id="profile-setup">
-            <h2>🏋️ Create Your Fitness Profile</h2>
+            <h2>🍎 AutoDiet Profile Setup</h2>
             <form id="profile-form">
                 <input type="number" id="age" placeholder="Age" min="12" max="100" required>
                 <input type="number" id="weight" placeholder="Weight (kg)" min="30" max="200" required>
                 <input type="number" id="height" placeholder="Height (cm)" min="120" max="250" required>
                 <select id="lifestyle" required>
-                    <option value="">Select Lifestyle 🏃</option>
-                    <option value="hosteler">🎓 Hosteler</option>
-                    <option value="corporate">💼 Corporate Worker</option>
+                    <option value="">Select Lifestyle</option>
                     <option value="student">📚 Student</option>
+                    <option value="professional">💼 Professional</option>
                     <option value="athlete">🏋️ Athlete</option>
+                    <option value="homemaker">🏡 Homemaker</option>
                 </select>
-                <button type="submit">Start Transformation 💪</button>
+                <button type="submit">Generate My Plan 🚀</button>
             </form>
         </div>
 
-        <div id="chat-interface" style="display: none;">
-            <h2>🔥 Your Personal Fitness Guide</h2>
-            <div class="chat-box" id="chat-messages"></div>
-            <div class="input-container">
-                <input type="text" id="user-input" placeholder="Ask about diet or workouts...">
-                <button onclick="handleUserInput()">Send 🚀</button>
-            </div>
+        <div id="auto-recommendations" class="auto-recommendations" style="display: none;">
+            <!-- Auto-generated content will be inserted here -->
         </div>
     </div>
 
     <script>
-        let userProfile = {};
-        const foodRecommendations = {
-            hosteler: {
-                consume: ["Sprouts", "Oats", "Boiled eggs", "Curd", "Bananas"],
-                avoid: ["Instant noodles", "Deep fried snacks", "Sugary drinks", "White bread"]
+        const dietData = {
+            student: {
+                foods: {
+                    good: ["Oatmeal", "Boiled Eggs", "Whole Grain Bread", "Yogurt", "Bananas"],
+                    bad: ["Instant Noodles", "Energy Drinks", "Fried Snacks", "Sugary Cereals"]
+                },
+                meals: {
+                    breakfast: "Peanut Butter Toast + Fruit",
+                    lunch: "Grilled Chicken Wrap + Salad",
+                    dinner: "Vegetable Stir-Fry + Brown Rice"
+                },
+                macros: { protein: 65, carbs: 220, fat: 50 }
             },
-            corporate: {
-                consume: ["Quinoa", "Grilled chicken", "Nuts", "Green tea", "Berries"],
-                avoid: ["Processed meats", "Pastries", "Energy drinks", "Fast food"]
-            },
-            athlete: {
-                consume: ["Sweet potatoes", "Salmon", "Greek yogurt", "Broccoli", "Avocado"],
-                avoid: ["Sugary cereals", "Alcohol", "Fried foods", "White pasta"]
+            professional: {
+                foods: {
+                    good: ["Quinoa", "Salmon", "Mixed Nuts", "Avocado", "Berries"],
+                    bad: ["Fast Food", "Pastries", "Sugary Coffee", "Processed Meats"]
+                },
+                meals: {
+                    breakfast: "Greek Yogurt + Granola",
+                    lunch: "Grilled Fish + Quinoa",
+                    dinner: "Lean Protein + Roasted Veggies"
+                },
+                macros: { protein: 75, carbs: 180, fat: 60 }
             }
-        };
-
-        const workoutPlans = {
-            hosteler: ["Jumping jacks (3x20)", "Push-ups (3x15)", "Bodyweight squats (3x20)", "Plank (1min)"],
-            corporate: ["Desk stretches (every hour)", "Chair dips (3x15)", "Walking meetings", "Posture exercises"],
-            athlete: ["HIIT training", "Weight lifting", "Plyometrics", "Sport-specific drills"]
         };
 
         document.getElementById('profile-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            userProfile = {
-                age: document.getElementById('age').value,
-                weight: document.getElementById('weight').value,
-                height: document.getElementById('height').value,
-                lifestyle: document.getElementById('lifestyle').value
-            };
-            
-            document.getElementById('profile-setup').style.display = 'none';
-            document.getElementById('chat-interface').style.display = 'block';
-            showInitialRecommendations();
+            const lifestyle = document.getElementById('lifestyle').value;
+            generateAutoRecommendations(lifestyle);
         });
 
-        function showInitialRecommendations() {
-            const html = `
-                <div class="recommendation-card">
-                    <h3>🍎 Food Recommendations</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <h4>Consume More:</h4>
-                    <div class="badge-list">
-                        ${foodRecommendations[userProfile.lifestyle].consume.map(f => `<div class="badge">${f}</div>`).join('')}
-                    </div>
-                    
-                    <h4>❌ Avoid:</h4>
-                    <div class="badge-list">
-                        ${foodRecommendations[userProfile.lifestyle].avoid.map(f => `<div class="badge avoid-badge">${f}</div>`).join('')}
-                    </div>
-                </div>
-
-                <div class="workout-card">
-                    <h3>💪 Daily Workout Plan</h3>
-                    <ul>
-                        ${workoutPlans[userProfile.lifestyle].map(ex => `<li>${ex}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
+        function generateAutoRecommendations(lifestyle) {
+            const data = dietData[lifestyle];
+            const container = document.getElementById('auto-recommendations');
             
-            addBotMessage(html);
-            addBotMessage("How can I assist you further? Ask about meal plans, recipes, or workout tips!");
-        }
-
-        // Previous chat handling functions with enhanced responses
-        function generateResponse(input) {
-            const lowInput = input.toLowerCase();
-            let response = '';
-
-            if (lowInput.includes('food') || lowInput.includes('diet')) {
-                response = getFoodAnalysis();
-            } else if (lowInput.includes('workout') || lowInput.includes('exercise')) {
-                response = getWorkoutTips();
-            } else {
-                response = getGeneralTips();
-            }
-
-            setTimeout(() => addBotMessage(response), 800);
-        }
-
-        function getFoodAnalysis() {
-            return `
-                <div class="recommendation-card">
-                    <h3>📊 Nutritional Analysis</h3>
-                    <p>Based on your ${userProfile.lifestyle} lifestyle:</p>
-                    <div class="badge-list">
-                        <div class="badge">Protein: ${getProteinRecommendation()}g</div>
-                        <div class="badge">Carbs: ${getCarbRecommendation()}g</div>
-                        <div class="badge">Fats: ${getFatRecommendation()}g</div>
+            container.innerHTML = `
+                <div class="recommendation-section">
+                    <h3>📋 Weekly Nutrition Plan</h3>
+                    <div class="weekly-plan">
+                        ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(day => `
+                            <div class="day-card">
+                                <h4>${day}</h4>
+                                <p>${data.meals.breakfast}</p>
+                                <p>${data.meals.lunch}</p>
+                                <p>${data.meals.dinner}</p>
+                            </div>
+                        `).join('')}
                     </div>
-                    <p>${getMealTimingTip()}</p>
+                </div>
+
+                <div class="recommendation-section">
+                    <h3>🍽️ Ideal Food Choices</h3>
+                    <div class="food-category">
+                        <div class="food-card" style="border-color: var(--primary);">
+                            <h4>✅ Recommended</h4>
+                            <ul>${data.foods.good.map(f => `<li>${f}</li>`).join('')}</ul>
+                        </div>
+                        <div class="food-card" style="border-color: var(--accent);">
+                            <h4>❌ Avoid</h4>
+                            <ul>${data.foods.bad.map(f => `<li>${f}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-section">
+                    <h3>⚖️ Daily Macronutrient Goals</h3>
+                    <div class="macro-grid">
+                        <div class="macro-card">
+                            <h4>Protein</h4>
+                            <h2>${data.macros.protein}g</h2>
+                            <p>Builds & repairs tissues</p>
+                        </div>
+                        <div class="macro-card">
+                            <h4>Carbohydrates</h4>
+                            <h2>${data.macros.carbs}g</h2>
+                            <p>Primary energy source</p>
+                        </div>
+                        <div class="macro-card">
+                            <h4>Fats</h4>
+                            <h2>${data.macros.fat}g</h2>
+                            <p>Hormone production</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recommendation-section">
+                    <h3>⏰ Meal Timing Schedule</h3>
+                    <div class="meal-timeline">
+                        <div class="meal-time">
+                            <h4>🌅 Breakfast (7-8 AM)</h4>
+                            <p>${data.meals.breakfast}</p>
+                        </div>
+                        <div class="meal-time">
+                            <h4>☀️ Lunch (12-1 PM)</h4>
+                            <p>${data.meals.lunch}</p>
+                        </div>
+                        <div class="meal-time">
+                            <h4>🌙 Dinner (7-8 PM)</h4>
+                            <p>${data.meals.dinner}</p>
+                        </div>
+                    </div>
                 </div>
             `;
-        }
 
-        function getProteinRecommendation() {
-            return {
-                hosteler: 60,
-                corporate: 75,
-                athlete: 90
-            }[userProfile.lifestyle];
-        }
-
-        function getWorkoutTips() {
-            return `
-                <div class="workout-card">
-                    <h3>🔥 Pro Workout Tips</h3>
-                    <ul>
-                        <li>Warm-up for 10 minutes before exercise</li>
-                        <li>Stay hydrated during workouts</li>
-                        <li>${userProfile.lifestyle === 'corporate' ? 'Take micro-breaks every hour' : 'Track your progress weekly'}</li>
-                        <li>Cool down and stretch post-workout</li>
-                    </ul>
-                </div>
-            `;
-        }
-
-        // Keep previous message handling functions
-        function handleUserInput() {
-            const input = document.getElementById('user-input').value.trim();
-            if (!input) return;
-
-            addUserMessage(input);
-            generateResponse(input);
-            document.getElementById('user-input').value = '';
-        }
-
-        function addUserMessage(text) {
-            const div = document.createElement('div');
-            div.className = 'message user-message';
-            div.textContent = text;
-            document.getElementById('chat-messages').appendChild(div);
-            div.scrollIntoView();
-        }
-
-        function addBotMessage(text) {
-            const div = document.createElement('div');
-            div.className = 'message bot-message';
-            div.innerHTML = text;
-            document.getElementById('chat-messages').appendChild(div);
-            div.scrollIntoView();
+            document.getElementById('profile-setup').style.display = 'none';
+            container.style.display = 'grid';
         }
     </script>
 </body>
